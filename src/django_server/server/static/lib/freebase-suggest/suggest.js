@@ -1337,17 +1337,6 @@
 
       // more
       if (result && result.length && "cursor" in response_data) {
-        if (!more.length) {
-          var more_link = $('<a class="fbs-more-link" href="#" title="(Ctrl+m)">view more</a>');
-          more = $('<div class="fbs-more">').append(more_link);
-          more_link.bind("click.suggest", function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var m = $(this).parent(".fbs-more");
-            self.more(m.data("cursor.suggest"));
-          });
-          l.after(more);
-        }
         more.data("cursor.suggest", response_data.cursor);
         more.show();
       }
