@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>  
+  <head>
+    <title>G Explore</title>
+    <link rel="stylesheet" href="/static/lib/freebase-suggest/suggest.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/lib/freebase-suggest/suggest.js"></script>
+  </head>
+  <body>
+    <div id="body">
+      <p><strong>G Explore</strong></p>
+      <input id="search-input" type="text">
+      <script type="text/javascript">
+        $(function() {
+          $("#search-input").suggest({
+            key:"AIzaSyBBJoStIWMWfWkgHIoRtLCCAg8B4ay2Vk8",
+            filter:'(all type:/location/)'
+          });
+        });
+      </script>      
+    </div> 
+  </body>
+</html>
