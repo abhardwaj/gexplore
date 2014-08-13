@@ -19,11 +19,13 @@ body {
 .freebase-suggest-image {
   float: left;
   padding-right: 1em;
+  height: 30px;
 }
 
 .freebase-suggest-category {
-  font-size: 0.6em;
+  font-size: 0.7em;
   color: #000;
+  min-height: 30px;
 }
 
 .ui-widget {

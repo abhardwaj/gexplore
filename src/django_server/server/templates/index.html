@@ -42,8 +42,8 @@
           function format_result(item) {
             var result = '<div class="freebase-suggest-container">';
             result += '<div class="freebase-suggest-label">' +  item.label + '</div>';
-            result += '<img class="freebase-suggest-image" src="' + FREEBASE_URL + '/image' +  item.id + '?maxwidth=75&errorid=/freebase/no_image_png" />';
-            result += '<span class="freebase-suggest-category">' + item.description + '</span>';
+            result += '<img class="freebase-suggest-image" src="' + FREEBASE_URL + '/image' +  item.id + '?maxheight=30&errorid=/freebase/no_image_png" />';
+            result += '<div class="freebase-suggest-category">' + item.description + '</div>';
             result += '</div>';
             return result
           }
