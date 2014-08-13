@@ -1,0 +1,16 @@
+/*
+@author: Anant Bhardwaj
+@date: 08/11/2012
+*/
+
+.freebase-suggest-label {
+	font: 
+	font-size: 0.9em;
+	color: #000;
+}
+
+.freebase-suggest-category {
+	font-size: 0.5em;
+	color: #999;
+	padding-left: 3em;
+}
