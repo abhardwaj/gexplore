@@ -4,6 +4,8 @@
 */
 
 var FREEBASE_URL = 'https://www.googleapis.com/freebase/v1/search';
+var DESCRIPTION_URL = FREEBASE_URL + '?filter=(all mid:${id})&' + 'output=(notable:/client/summary description type)&key=${key}';
+var IMAGE_URL = FREEBASE_URL + '/image${id}?maxwidth=75&key=${key}&errorid=/freebase/no_image_png'
 
 function fetch_freebase_suggestions (params) {
   if (params == null)
@@ -20,7 +22,7 @@ function fetch_freebase_suggestions (params) {
     'advanced': true,
     'exact': false,
     'limit': 10,
-    'stemmed': true
+    'prefixed': true
   };
   
   search_params['query'] =  params['query'];

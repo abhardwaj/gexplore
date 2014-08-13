@@ -3,14 +3,24 @@
 @date: 08/11/2012
 */
 
+body {
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, Verdana, sans-serif;
+  font-size:0.9em;
+}
+
 .freebase-suggest-label {
-	font: 
-	font-size: 0.9em;
-	color: #000;
+  font: 
+  font-size: 0.9em;
+  color: #000;
 }
 
 .freebase-suggest-category {
-	font-size: 0.5em;
-	color: #999;
-	padding-left: 3em;
+  font-size: 0.5em;
+  color: #999;
+  padding-left: 3em;
+}
+
+.ui-widget {
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, Verdana, sans-serif;
+  font-size:0.9em;
 }
