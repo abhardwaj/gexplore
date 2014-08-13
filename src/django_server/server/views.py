@@ -15,3 +15,6 @@ def freebase_suggest(request):
 
 def maps_suggest(request):
   return render_to_response("maps_suggest.html")
+
+def maps_suggest_google(request):
+  return render_to_response("maps_suggest_google.html")

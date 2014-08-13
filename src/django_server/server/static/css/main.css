@@ -8,7 +8,22 @@ body {
   font-size:1.0em;
 }
 
-.freebase-suggest-label {
+.maps-suggest-title {
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  font-size: 1.0em;
+  color: #000;
+  font-weight: bold;
+}
+
+.maps-suggest-details {
+  font-size: 0.7em;
+  color: #999;
+  min-height: 30px;
+  padding-left: 1em;
+}
+
+.freebase-suggest-title {
   padding-top: 0.4em;
   padding-bottom: 0.4em;
   font-size: 1.0em;
@@ -22,7 +37,7 @@ body {
   height: 30px;
 }
 
-.freebase-suggest-category {
+.freebase-suggest-details {
   font-size: 0.7em;
   color: #000;
   min-height: 30px;
@@ -41,13 +56,23 @@ body {
   width: 40em;
 }
 
-.ui-state-hover .freebase-suggest-category,
-.ui-state-focus .freebase-suggest-category {
+.ui-state-hover .freebase-suggest-details,
+.ui-state-focus .freebase-suggest-details {
   color: #fff;
 }
 
-.ui-state-hover .freebase-suggest-label,
-.ui-state-focus .freebase-suggest-label {
+.ui-state-hover .freebase-suggest-title,
+.ui-state-focus .freebase-suggest-title {
+  color: #fff;
+}
+
+.ui-state-hover .maps-suggest-details,
+.ui-state-focus .maps-suggest-details {
+  color: #fff;
+}
+
+.ui-state-hover .maps-suggest-title,
+.ui-state-focus .maps-suggest-title {
   color: #fff;
 }
 
