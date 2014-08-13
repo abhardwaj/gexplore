@@ -8,6 +8,32 @@ body {
   font-size:1.0em;
 }
 
+#page {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+#logo {
+  font-family: 'Spirax', cursive;
+  width:10em;
+  margin: 0 auto;
+  margin-top: 8em;
+}
+
+#search-container {
+  width: 100%;
+}
+
+#search-input {
+  margin: 0 auto;
+  width:40em;
+  height: 1.5em;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 1.0em;
+  display: block;
+}
+
 .maps-suggest-title {
   padding-top: 0.4em;
   padding-bottom: 0.4em;
@@ -86,12 +112,4 @@ body {
   background:#367af8;
   background:-moz-linear-gradient(top, #648ffa 0, #0d67f7 100%);
   background:-webkit-gradient(linear, 0 0, 0 100%, from(#648ffa), to(#0d67f7));
-}
-
-#search-input {
-  width:40em;
-  height: 1.5em;
-  padding-top: 0;
-  padding-bottom: 0;
-  font-size: 1.0em;
 }
