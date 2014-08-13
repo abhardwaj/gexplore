@@ -5,23 +5,25 @@
 
 body {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, Verdana, sans-serif;
-  font-size:0.9em;
+  font-size:1.0em;
 }
 
 .freebase-suggest-label {
   padding-top: 0.4em;
   padding-bottom: 0.4em;
-  font-size: 1.1em;
-  color: #367af8;
+  font-size: 1.0em;
+  color: #000;
+  font-weight: bold;
+}
+
+.freebase-suggest-image {
+  float: left;
+  padding-right: 1em;
 }
 
 .freebase-suggest-category {
-  padding-top: 0.3em;
-  padding-bottom: 0.3em;
   font-size: 0.6em;
-  color: #999;
-  padding-left: 3em;
-  float: right;
+  color: #000;
 }
 
 .ui-widget {
@@ -34,11 +36,12 @@ body {
   border-radius: 4px;
   box-shadow: rgba(0,0,0,0.3) 0 1px 2px;
   color: #367af8;
+  width: 40em;
 }
 
 .ui-state-hover .freebase-suggest-category,
 .ui-state-focus .freebase-suggest-category {
-  color: #ccc;
+  color: #fff;
 }
 
 .ui-state-hover .freebase-suggest-label,

@@ -4,7 +4,6 @@
     <title>G Explore</title>
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" href="/static/css/main.css" />
-
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/static/js/freebase-fetcher.js"></script>
@@ -12,44 +11,44 @@
   <body>
     <div id="body">
       <p><strong>G Explore</strong></p>
-      <input id="search-input" type="text">
-      <script type="text/javascript">
-        var FREEBASE_URL = 'https://www.googleapis.com/freebase/v1/search';
-        search_params = {
-          'filter': '(all type:/location/)',
-          'spell': 'always',
-          'lang': 'en',
-          'scoring': 'entity',
-          'advanced': true,
-          'exact': false,
-          'limit': 10,
-          'stemmed': true
-        };
+      <div id="search-container">
+        <input id="search-input" type="text">
+        <script type="text/javascript">
+          $( "#search-input" ).autocomplete({
+            source: function(request, response) {
+              fetch_freebase_suggestions({
+                'query': request.term,
+                'success': function(data) {
+                  console.log(data);
+                  response($.map(data.result, function(item) {
+                    return {
+                      'category': item.notable.name,
+                      'description': item.output.description['/common/topic/description'][0],
+                      'label': item.name,
+                      'value': item.name,
+                      'id': item.mid
+                    }
+                  }));             
+                }
+              });
+            }
+          }).data("ui-autocomplete")._renderItem = function (ul, item) {
+            return $("<li></li>")
+              .data("item.autocomplete", item)
+              .append(format_result(item))
+              .appendTo(ul);
+          };
 
-        $( "#search-input" ).autocomplete({
-          source: function(request, response) {
-            fetch_freebase_suggestions({
-              'query': request.term,
-              'success': function(data) {
-                console.log(data);
-                response($.map(data.result, function(item) {
-                  return {
-                    'category': item.notable.name,
-                    'label': item.name,
-                    'value': item.name,
-                    'id': item.mid
-                  }
-                }));             
-              }
-            });
+          function format_result(item) {
+            var result = '<div class="freebase-suggest-container">';
+            result += '<div class="freebase-suggest-label">' +  item.label + '</div>';
+            result += '<img class="freebase-suggest-image" src="' + FREEBASE_URL + '/image' +  item.id + '?maxwidth=75&errorid=/freebase/no_image_png" />';
+            result += '<span class="freebase-suggest-category">' + item.description + '</span>';
+            result += '</div>';
+            return result
           }
-        }).data("ui-autocomplete")._renderItem = function (ul, item) {
-          return $("<li></li>")
-            .data("item.autocomplete", item)
-            .append('<span class="freebase-suggest-label">' + item.label + '</span>' + '<span class="freebase-suggest-category">' + item.category + '</span>')
-            .appendTo(ul);
-        };
-      </script>      
-    </div> 
+        </script>      
+      </div> 
+    </div>
   </body>
 </html>

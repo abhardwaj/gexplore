@@ -3,9 +3,8 @@
 @date: 08/14/2014
 */
 
-var FREEBASE_URL = 'https://www.googleapis.com/freebase/v1/search';
-var DESCRIPTION_URL = FREEBASE_URL + '?filter=(all mid:${id})&' + 'output=(notable:/client/summary description type)&key=${key}';
-var IMAGE_URL = FREEBASE_URL + '/image${id}?maxwidth=75&key=${key}&errorid=/freebase/no_image_png'
+var FREEBASE_URL = 'https://www.googleapis.com/freebase/v1';
+var SEARCH_URL = FREEBASE_URL + '/search';
 
 function fetch_freebase_suggestions (params) {
   if (params == null)
@@ -14,7 +13,7 @@ function fetch_freebase_suggestions (params) {
   if (params.query == null || params.query == '')
     return;
   
-  var search_params = {
+  var fetch_params = {
     'filter': '(all type:/location/)',
     'spell': 'always',
     'lang': 'en',
@@ -22,17 +21,18 @@ function fetch_freebase_suggestions (params) {
     'advanced': true,
     'exact': false,
     'limit': 10,
+    'output': '(notable:/client/summary description type)',
     'prefixed': true
   };
   
-  search_params['query'] =  params['query'];
+  fetch_params['query'] =  params['query'];
   
   $.ajax({
     type: 'GET',
-    url: FREEBASE_URL,
+    url: SEARCH_URL,
     async: true, 
     cache: true,
-    data: search_params, 
+    data: fetch_params, 
     success: function(data) {
       if (params.success) {
         params.success(data)
