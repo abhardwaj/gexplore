@@ -10,5 +10,8 @@ from django.shortcuts import render_to_response
 GExplorer Web Handler
 '''
 
-def home(request):
-  return render_to_response("index.html")
+def freebase_suggest(request):
+  return render_to_response("freebase_suggest.html")
+
+def maps_suggest(request):
+  return render_to_response("maps_suggest.html")

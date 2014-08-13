@@ -12,11 +12,7 @@ FREEBASE_URL = 'https://www.googleapis.com/freebase/v1/search'
 
 def fetch_url(url, params):
   search_params = {
-    'filter': '(all type:/location/)',
-    'spell': 'always',
-    'scoring': 'freebase',
-    'stemmed': True,
-   
+    'scoring': 'freebase'   
   };
   
   for k, v in params.iteritems():
@@ -28,4 +24,4 @@ def fetch_url(url, params):
 
 
 
-print fetch_url(FREEBASE_URL, {'query': 'fremont'})
+print fetch_url(FREEBASE_URL, {'query': 'vista points near san francisco'})
