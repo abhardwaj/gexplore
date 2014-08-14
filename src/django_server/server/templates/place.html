@@ -22,7 +22,7 @@
     $("#map-canvas").hide();
     $("#results").html('');
     if ("{{type}}" == "-1") {
-      load_hotels_freebase(place);
+      load_hotels_maps(place);
       load_restaurants_maps(place);
       load_bars_maps(place);
       load_tourist_attractions_freebase(place)
@@ -104,8 +104,9 @@
       'fetch_params': fetch_params,
       'success': function(data) {
         console.log(data)
-        if (data.result.length < 3) {
+        if (data.result.length < 7) {
           load_hotels_maps(place)
+          return
         }
         append_to_page_freebase(data.result, 'Top Hotels');
       }
