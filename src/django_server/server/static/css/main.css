@@ -101,7 +101,7 @@ body {
   overflow-x: scroll;
 }
 
-.maps-suggest-title {
+.autocomplete-suggest-title {
   padding-top: 0.4em;
   padding-bottom: 0.4em;
   font-size: 1.0em;
@@ -109,32 +109,14 @@ body {
   font-weight: bold;
 }
 
-.maps-suggest-details {
+.autocomplete-suggest-details {
   font-size: 0.7em;
   color: #999;
   min-height: 30px;
   padding-left: 1em;
 }
 
-.freebase-suggest-title {
-  padding-top: 0.4em;
-  padding-bottom: 0.4em;
-  font-size: 1.0em;
-  color: #000;
-  font-weight: bold;
-}
 
-.freebase-suggest-image {
-  float: left;
-  padding-right: 1em;
-  height: 30px;
-}
-
-.freebase-suggest-details {
-  font-size: 0.7em;
-  color: #000;
-  min-height: 30px;
-}
 
 .ui-widget {
   font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, Verdana, sans-serif;
@@ -148,23 +130,13 @@ body {
   color: #367af8;
 }
 
-.ui-state-hover .freebase-suggest-details,
-.ui-state-focus .freebase-suggest-details {
+.ui-state-hover .autocomplete-suggest-details,
+.ui-state-focus .autocomplete-suggest-details {
   color: #fff;
 }
 
-.ui-state-hover .freebase-suggest-title,
-.ui-state-focus .freebase-suggest-title {
-  color: #fff;
-}
-
-.ui-state-hover .maps-suggest-details,
-.ui-state-focus .maps-suggest-details {
-  color: #fff;
-}
-
-.ui-state-hover .maps-suggest-title,
-.ui-state-focus .maps-suggest-title {
+.ui-state-hover .autocomplete-suggest-title,
+.ui-state-focus .autocomplete-suggest-title {
   color: #fff;
 }
 
