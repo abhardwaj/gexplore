@@ -21,9 +21,13 @@
     $("#results").html('');
     var map = new google.maps.Map(document.getElementById('map-canvas'));
     var service = new google.maps.places.PlacesService(map);
-    load_hotels(service, place);
-    load_restaurants(service, place);
-    load_bars(service, place);
+    if ("{{type}}" == "-1") {
+      load_hotels(service, place);
+      load_restaurants(service, place);
+      load_bars(service, place);
+    } else {
+      load_tourist_destinations(place)
+    }
   }
 
   function load_hotels(service, place) {
@@ -56,18 +60,48 @@
     });
   }
 
+  function load_tourist_destinations(place) {
+    var fetch_params = {
+      'filter': '(all type:/travel/travel_destination part_of:"' + place.split(",")[0] + '")',
+      'scoring': 'entity',
+      'output': '(notable:/client/summary description type)'
+    };
+    fetch_freebase_suggestions({
+      'fetch_params': fetch_params,
+      'success': function(data) {
+        append_to_page_freebase(data.result, 'Top Destinations');
+      }
+    });
+  }
+
   function append_to_page(results, title) {
     var html = '<h3>' + title + '</h3>';
     html += '<div class="results-list-container">';
     for (var i = 0; i < results.length; i++) {
       if (results[i].photos != null  && results[i].photos.length > 0) {
-        var image_url = results[i].photos[0].getUrl({maxHeight:200, maxWidth:200});
+        var image_url = results[i].photos[0].getUrl({maxHeight:400});
         if (image_url == null) return
         html += '<div class="result-item-container">';
         html += '<img class="result-item-image" src="' + image_url + '" />';
         html += '<div class="result-item-label">' + results[i].name + '</div>'
         html += '</div>';
       }
+    }
+    html += '</div>';
+    $("#results").append(html);
+  }
+
+  function append_to_page_freebase(results, title) {
+    var html = '<h3>' + title + '</h3>';
+    html += '<div class="results-list-container">';
+    for (var i = 0; i < results.length; i++) {
+      if (results[i].notable.id == '/location/country') continue
+      console.log(results[i])
+      var image_url = FREEBASE_URL + '/image' +  results[i].mid + '?maxheight=300&errorid=/freebase/no_image_png" />';
+      html += '<div class="result-item-container">';
+      html += '<img class="result-item-image" src="' + image_url + '" />';
+      html += '<div class="result-item-label">' + results[i].name + '</div>'        
+      html += '</div>';      
     }
     html += '</div>';
     $("#results").append(html);

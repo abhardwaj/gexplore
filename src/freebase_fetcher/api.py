@@ -17,11 +17,6 @@ def fetch_url(url, params):
 
 
 search_params = {
-  'filter': '(all type:/travel/travel_destination part_of:california)'
-}
-print fetch_url(FREEBASE_URL, search_params)
-
-search_params = {
-  'filter': '(all type:restaurant/ part_of:"san francisco")'
+  'filter': '(all type:/travel/travel_destination part_of:"United States")'
 }
 print fetch_url(FREEBASE_URL, search_params)
