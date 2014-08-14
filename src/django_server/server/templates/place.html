@@ -34,7 +34,7 @@
 
   function load_hotels_maps(place) {
     var request = {
-      query: "hotels " + place,
+      query: "top hotels " + place,
     };
     
     place_service.textSearch(request, function(results){
@@ -134,7 +134,7 @@
   }
 
   function append_to_page_freebase(results, title) {
-    if (results.length < 3) return
+    if (results.length < 2) return
     var html = '<h3>' + title + '</h3>';
     html += '<div class="results-list-container">';
     for (var i = 0; i < results.length; i++) {
