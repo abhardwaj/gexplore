@@ -4,7 +4,9 @@
 <h1>G Explore</h1>
 </div>
 <div id="search-container">
+  <div id="map-canvas" style="display:none;"></div>
   <input id="search-input" type="text" />
+  <div id="results"></div>
   <script type="text/javascript">
     var service = new google.maps.places.AutocompleteService();
     $( "#search-input" ).autocomplete({
@@ -18,8 +20,8 @@
             return {
               'data': item,
               'query': request.term,
-              'label': item.description,
-              'value': item.description
+              'label': item.terms[0].value,
+              'value': item.terms[0].value
             }
           }));
       })},
@@ -42,7 +44,62 @@
     }
 
     function load_page(place) {
-      console.log(place)
+      $("#map-canvas").hide();
+      $("#results").html('');
+      var map = new google.maps.Map(document.getElementById('map-canvas'));
+      var service = new google.maps.places.PlacesService(map);
+      load_hotels(service, place);
+      load_restaurants(service, place);
+      load_bars(service, place);
+    }
+
+    function load_hotels(service, place) {
+      var request = {
+        query: "top hotels in " + place.data.terms[0].value
+      };
+      
+      service.textSearch(request, function(results){
+        append_to_page(results, 'Hotels')
+      });
+    }
+
+    function load_restaurants(service, place) {
+      var request = {
+        query: "top restaurants in " + place.data.terms[0].value
+      };
+      
+      service.textSearch(request, function(results){
+        append_to_page(results, 'Restaurants')
+      });
+    }
+
+    function load_bars(service, place) {
+      var request = {
+        query: "top bars in " + place.data.terms[0].value
+      };
+      
+      service.textSearch(request, function(results){
+        append_to_page(results, 'Bars')
+      });
+    }
+
+    function append_to_page(results, title) {
+      var html = '<h3>' + title + '</h3>';
+      html += '<div class="results-list-container">';
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].photos != null  && results[i].photos.length > 0) {
+          console.log("here");
+          html += '<div class="result-item-container">';
+          html += '<img class="result-item-image" src="' + results[i].photos[0].getUrl({maxHeight:200, maxWidth:200}) + '" />';
+          html += '<div class="result-item-label">' + results[i].name + '</div>'
+          html += '</div>';
+        }
+      }
+
+      html += '</div>';
+      $("#results").append(html)
+      
+
     }
   </script>      
 </div> 

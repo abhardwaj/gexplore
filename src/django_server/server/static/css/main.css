@@ -34,6 +34,38 @@ body {
   display: block;
 }
 
+.result-item-container {
+  padding: 2px;
+  max-width: 200px;
+  height: 280px;
+  display: inline-block;
+}
+
+.result-item-image {
+  max-width: 150px;
+  height: 150px;
+  display: block;
+}
+
+.result-item-label {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 0.5em;
+  font-size: 0.7em;
+  height: 50px;
+  max-width: 150px;
+  max-height: 50px;
+  overflow: hidden;
+  color: #ccc;
+}
+
+.results-list-container {
+  background-color: #000;
+  height: 200px;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
 .maps-suggest-title {
   padding-top: 0.4em;
   padding-bottom: 0.4em;
