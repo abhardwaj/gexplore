@@ -12,7 +12,9 @@
     <script type="text/javascript" src="/static/js/search_loader.js"></script>
   </head>
   <body>
-    <div id="page">
+    {% block header %}
+    {% endblock %}
+    <div class="wrap">
       {% block content %}
       {% endblock %}
     </div>

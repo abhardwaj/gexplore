@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
-{% block content %} 
+{% block header %}
 <div id="header">
+<div class="wrap">
 <div id="search-container">
   <div id="logo" style="float:left;">
     <h3>G Explore</h3>
@@ -8,6 +9,9 @@
   <input id="search-input" type="text" value="{{place}}" />
 </div>
 </div>
+</div>
+{% endblock %} 
+{% block content %} 
 <div id="results"></div>
 <div id="map-canvas" style="display:none;"></div>
 <script type="text/javascript">
