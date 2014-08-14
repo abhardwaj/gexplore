@@ -3,7 +3,7 @@
 @date: 08/14/2014
 */
 
-var service = new google.maps.places.AutocompleteService();
+var autocomplete_service = new google.maps.places.AutocompleteService();
 
 function get_type_code(types){
   if (types.indexOf("country") > -1) {
@@ -20,7 +20,7 @@ function load_search(input_id) {
   $(input_id).autocomplete({
     source: function(request, response) {
       var search_params = {input: request.term, types: ['(regions)']}           
-      service.getPlacePredictions(search_params, function(data) {
+      autocomplete_service.getPlacePredictions(search_params, function(data) {
         console.log(data)
         if (data == null) {
           return response([])

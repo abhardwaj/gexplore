@@ -15,16 +15,16 @@
 <div id="results"></div>
 <div id="map-canvas" style="display:none;"></div>
 <script type="text/javascript">
+  var map = new google.maps.Map(document.getElementById('map-canvas'));
+  var place_service = new google.maps.places.PlacesService(map);
   load_search(document.getElementById("search-input"));
   function load_page(place) {
     $("#map-canvas").hide();
     $("#results").html('');
-    var map = new google.maps.Map(document.getElementById('map-canvas'));
-    var service = new google.maps.places.PlacesService(map);
     if ("{{type}}" == "-1") {
-      load_hotels_maps(service, place);
-      load_restaurants_maps(service, place);
-      load_bars_maps(service, place);
+      load_hotels_freebase(place);
+      load_restaurants_maps(place);
+      load_bars_maps(place);
       load_tourist_attractions_freebase(place)
     } else {
       load_tourist_destinations_freebase(place)
@@ -32,32 +32,32 @@
     }
   }
 
-  function load_hotels_maps(service, place) {
+  function load_hotels_maps(place) {
     var request = {
       query: "hotels " + place,
     };
     
-    service.textSearch(request, function(results){
+    place_service.textSearch(request, function(results){
       append_to_page(results, 'Hotels')
     });
   }
 
-  function load_restaurants_maps(service, place) {
+  function load_restaurants_maps(place) {
     var request = {
       query: "restaurants " + place
     };
     
-    service.textSearch(request, function(results){
+    place_service.textSearch(request, function(results){
       append_to_page(results, 'Restaurants')
     });
   }
 
-  function load_bars_maps(service, place) {
+  function load_bars_maps(place) {
     var request = {
       query: "bars " + place
     };
     
-    service.textSearch(request, function(results){
+    place_service.textSearch(request, function(results){
       append_to_page(results, 'Bars')
     });
   }
@@ -93,10 +93,10 @@
     });
   }
 
-  function load_restaurants_freebase(place) {
+  function load_hotels_freebase(place) {
     var fetch_params = {
       'prefixed': true,
-      'filter': '(all type:/dining/restaurant part_of:"' + place.split(",")[0] + '")',
+      'filter': '(all type:/travel/hotel part_of:"' + place.split(",")[0] + '")',
       'scoring': 'entity',
       'output': '(notable:/client/summary description type)'
     };
@@ -104,7 +104,10 @@
       'fetch_params': fetch_params,
       'success': function(data) {
         console.log(data)
-        append_to_page_freebase(data.result, 'Top Restaurants');
+        if (data.result.length < 3) {
+          load_hotels_maps(place)
+        }
+        append_to_page_freebase(data.result, 'Top Hotels');
       }
     });
   }
@@ -116,7 +119,9 @@
     for (var i = 0; i < results.length; i++) {
       if (results[i].photos != null  && results[i].photos.length > 0) {
         var image_url = results[i].photos[0].getUrl({maxHeight:400});
-        if (image_url == null) return
+        if (image_url == null) {
+          image_url = FREEBASE_URL + '/freebase/no_image_png'
+        }
         html += '<div class="result-item-container">';
         html += '<img class="result-item-image" src="' + image_url + '" />';
         html += '<div class="result-item-label">' + results[i].name + '</div>'
@@ -128,7 +133,7 @@
   }
 
   function append_to_page_freebase(results, title) {
-    if (results.length < 5) return
+    if (results.length < 3) return
     var html = '<h3>' + title + '</h3>';
     html += '<div class="results-list-container">';
     for (var i = 0; i < results.length; i++) {
