@@ -10,8 +10,9 @@ from django.shortcuts import render_to_response
 GExplorer Web Handler
 '''
 
-def freebase_suggest(request):
-  return render_to_response("freebase_suggest.html")
+def search(request):
+  return render_to_response("search.html")
 
-def maps_suggest(request):
-  return render_to_response("maps_suggest.html")
+def place(request, place):
+  p = {'place': place}
+  return render_to_response("place.html", p)

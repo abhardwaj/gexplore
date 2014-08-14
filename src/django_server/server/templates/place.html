@@ -8,41 +8,7 @@
   <input id="search-input" type="text" />
   <div id="results"></div>
   <script type="text/javascript">
-    var service = new google.maps.places.AutocompleteService();
-    $( "#search-input" ).autocomplete({
-      source: function(request, response) {
-        var search_params = {input: request.term, types: ['(regions)']}           
-        service.getPlacePredictions(search_params, function(data) {
-          if (data == null) {
-            return response([])
-          }          
-          return response($.map(data, function(item) {
-            return {
-              'data': item,
-              'query': request.term,
-              'label': item.description,
-              'value': item.description
-            }
-          }));
-      })},
-      select: function(e, ui) {
-        load_page(ui.item);
-      }
-    }).data("ui-autocomplete")._renderItem = function (ul, item) {
-      return $("<li></li>")
-        .data("item.autocomplete", item)
-        .append(format_result(item))
-        .appendTo(ul);
-    };
-
-    function format_result(item) {
-      var result = '<span class="maps-suggest-title">' +  item.data.terms[0].value + '</span>';
-      for (var i = 1; i < item.data.terms.length; i++) {
-        result += '<span class="maps-suggest-details">' +  item.data.terms[i].value + '</span>';
-      }
-      return result
-    }
-
+    load_search(document.getElementById("search-input"));
     function load_page(place) {
       $("#map-canvas").hide();
       $("#results").html('');
@@ -55,7 +21,7 @@
 
     function load_hotels(service, place) {
       var request = {
-        query: "hotels " + place.data.description,
+        query: "hotels " + place,
       };
       
       service.textSearch(request, function(results){
@@ -65,7 +31,7 @@
 
     function load_restaurants(service, place) {
       var request = {
-        query: "restaurants near " + place.data.description
+        query: "restaurants " + place
       };
       
       service.textSearch(request, function(results){
@@ -75,7 +41,7 @@
 
     function load_bars(service, place) {
       var request = {
-        query: "bars " + place.data.description
+        query: "bars " + place
       };
       
       service.textSearch(request, function(results){
@@ -96,12 +62,11 @@
           html += '</div>';
         }
       }
-
       html += '</div>';
-      $("#results").append(html)
-      
-
+      $("#results").append(html);
     }
+
+    load_page("{{place}}");
   </script>      
 </div> 
 {% endblock %} 
