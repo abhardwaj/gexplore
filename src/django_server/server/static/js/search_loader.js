@@ -21,7 +21,7 @@ function load_search(input_id) {
         }));
     })},
     select: function(e, ui) {
-      window.location.href = '/p/' + encodeURIComponent(ui.item.value);
+      window.location.href = '/p?place=' + encodeURIComponent(ui.item.value);
     }
   }).data("ui-autocomplete")._renderItem = function (ul, item) {
     return $("<li></li>")

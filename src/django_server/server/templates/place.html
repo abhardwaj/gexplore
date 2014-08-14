@@ -1,72 +1,75 @@
 {% extends "layout.html" %}
 {% block content %} 
-<div id="logo">
-<h1>G Explore</h1>
-</div>
+<div id="header">
 <div id="search-container">
-  <div id="map-canvas" style="display:none;"></div>
-  <input id="search-input" type="text" />
-  <div id="results"></div>
-  <script type="text/javascript">
-    load_search(document.getElementById("search-input"));
-    function load_page(place) {
-      $("#map-canvas").hide();
-      $("#results").html('');
-      var map = new google.maps.Map(document.getElementById('map-canvas'));
-      var service = new google.maps.places.PlacesService(map);
-      load_hotels(service, place);
-      load_restaurants(service, place);
-      load_bars(service, place);
-    }
+  <div id="logo" style="float:left;">
+    <h3>G Explore</h3>
+  </div>
+  <input id="search-input" type="text" value="{{place}}" />
+</div>
+</div>
+<div id="results"></div>
+<div id="map-canvas" style="display:none;"></div>
+<script type="text/javascript">
+  load_search(document.getElementById("search-input"));
+  function load_page(place) {
+    $("#map-canvas").hide();
+    $("#results").html('');
+    var map = new google.maps.Map(document.getElementById('map-canvas'));
+    var service = new google.maps.places.PlacesService(map);
+    load_hotels(service, place);
+    load_restaurants(service, place);
+    load_bars(service, place);
+  }
 
-    function load_hotels(service, place) {
-      var request = {
-        query: "hotels " + place,
-      };
-      
-      service.textSearch(request, function(results){
-        append_to_page(results, 'Hotels')
-      });
-    }
+  function load_hotels(service, place) {
+    var request = {
+      query: "hotels " + place,
+    };
+    
+    service.textSearch(request, function(results){
+      append_to_page(results, 'Hotels')
+    });
+  }
 
-    function load_restaurants(service, place) {
-      var request = {
-        query: "restaurants " + place
-      };
-      
-      service.textSearch(request, function(results){
-        append_to_page(results, 'Restaurants')
-      });
-    }
+  function load_restaurants(service, place) {
+    var request = {
+      query: "restaurants " + place
+    };
+    
+    service.textSearch(request, function(results){
+      append_to_page(results, 'Restaurants')
+    });
+  }
 
-    function load_bars(service, place) {
-      var request = {
-        query: "bars " + place
-      };
-      
-      service.textSearch(request, function(results){
-        append_to_page(results, 'Bars')
-      });
-    }
+  function load_bars(service, place) {
+    var request = {
+      query: "bars " + place
+    };
+    
+    service.textSearch(request, function(results){
+      append_to_page(results, 'Bars')
+    });
+  }
 
-    function append_to_page(results, title) {
-      var html = '<h3>' + title + '</h3>';
-      html += '<div class="results-list-container">';
-      for (var i = 0; i < results.length; i++) {
-        if (results[i].photos != null  && results[i].photos.length > 0) {
-          var image_url = results[i].photos[0].getUrl({maxHeight:200, maxWidth:200});
-          if (image_url == null) return
-          html += '<div class="result-item-container">';
-          html += '<img class="result-item-image" src="' + image_url + '" />';
-          html += '<div class="result-item-label">' + results[i].name + '</div>'
-          html += '</div>';
-        }
+  function append_to_page(results, title) {
+    var html = '<h3>' + title + '</h3>';
+    html += '<div class="results-list-container">';
+    for (var i = 0; i < results.length; i++) {
+      if (results[i].photos != null  && results[i].photos.length > 0) {
+        var image_url = results[i].photos[0].getUrl({maxHeight:200, maxWidth:200});
+        if (image_url == null) return
+        html += '<div class="result-item-container">';
+        html += '<img class="result-item-image" src="' + image_url + '" />';
+        html += '<div class="result-item-label">' + results[i].name + '</div>'
+        html += '</div>';
       }
-      html += '</div>';
-      $("#results").append(html);
     }
+    html += '</div>';
+    $("#results").append(html);
+  }
 
-    load_page("{{place}}");
-  </script>      
-</div> 
+  load_page("{{place}}");
+</script>      
+
 {% endblock %} 

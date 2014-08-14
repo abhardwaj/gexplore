@@ -13,6 +13,6 @@ GExplorer Web Handler
 def search(request):
   return render_to_response("search.html")
 
-def place(request, place):
-  p = {'place': place}
+def place(request):
+  p = {'place': request.REQUEST['place']}
   return render_to_response("place.html", p)
