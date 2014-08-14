@@ -139,7 +139,7 @@
     html += '<div class="results-list-container">';
     for (var i = 0; i < results.length; i++) {
       if (results[i].notable.id == '/location/country') continue
-      var image_url = FREEBASE_URL + '/image' +  results[i].mid + '?maxheight=300&errorid=/freebase/no_image_png" />';
+      var image_url = FREEBASE_URL + '/image' +  results[i].mid + '?maxheight=300&errorid=/freebase/no_image_png';
       html += '<div class="result-item-container">';
       html += '<img class="result-item-image" src="' + image_url + '" />';
       html += '<div class="result-item-label">' + results[i].name + '</div>'        
