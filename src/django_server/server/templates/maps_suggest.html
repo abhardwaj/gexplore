@@ -20,8 +20,8 @@
             return {
               'data': item,
               'query': request.term,
-              'label': item.terms[0].value,
-              'value': item.terms[0].value
+              'label': item.description,
+              'value': item.description
             }
           }));
       })},
@@ -55,7 +55,7 @@
 
     function load_hotels(service, place) {
       var request = {
-        query: "top hotels in " + place.data.terms[0].value
+        query: "hotels " + place.data.description,
       };
       
       service.textSearch(request, function(results){
@@ -65,7 +65,7 @@
 
     function load_restaurants(service, place) {
       var request = {
-        query: "top restaurants in " + place.data.terms[0].value
+        query: "restaurants near " + place.data.description
       };
       
       service.textSearch(request, function(results){
@@ -75,7 +75,7 @@
 
     function load_bars(service, place) {
       var request = {
-        query: "top bars in " + place.data.terms[0].value
+        query: "bars " + place.data.description
       };
       
       service.textSearch(request, function(results){
@@ -88,9 +88,10 @@
       html += '<div class="results-list-container">';
       for (var i = 0; i < results.length; i++) {
         if (results[i].photos != null  && results[i].photos.length > 0) {
-          console.log("here");
+          var image_url = results[i].photos[0].getUrl({maxHeight:200, maxWidth:200});
+          if (image_url == null) return
           html += '<div class="result-item-container">';
-          html += '<img class="result-item-image" src="' + results[i].photos[0].getUrl({maxHeight:200, maxWidth:200}) + '" />';
+          html += '<img class="result-item-image" src="' + image_url + '" />';
           html += '<div class="result-item-label">' + results[i].name + '</div>'
           html += '</div>';
         }
