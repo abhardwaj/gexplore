@@ -81,17 +81,26 @@
   }
 
   function load_tourist_destinations_freebase(place) {
+    var terms = place.split(",");
     var fetch_params = {
       'limit': 35,
       'prefixed': true,
-      'filter': '(all type:/travel/travel_destination part_of:"' + place.split(",")[0] + '")',
+      'filter': '(all type:/travel/travel_destination part_of:"' + terms[0] + '")',
       'scoring': 'entity',
       'output': '(notable:/client/summary description type)'
     };
     fetch_freebase_suggestions({
       'fetch_params': fetch_params,
       'success': function(data) {
-        append_to_page_freebase(data.result, 'Top Destinations');
+        var final_results = []
+        for (var i=0; i<data.result.length; i++) {
+          var match = data.result[i].name.match(terms[0]);
+          if (match) {
+            continue
+          }
+          final_results.push(data.result[i])
+        }
+        append_to_page_freebase(final_results, 'Top Destinations');
       }
     });
   }
