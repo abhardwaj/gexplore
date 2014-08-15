@@ -22,19 +22,19 @@
     $("#map-canvas").hide();
     $("#results").html('');
     if ("{{type}}" == "-1") {
+      load_tourist_attractions_freebase(place)
       load_hotels_maps(place);
       load_restaurants_maps(place);
       load_bars_maps(place);
-      load_tourist_attractions_freebase(place)
     } else {
-      load_tourist_destinations_freebase(place)
       load_tourist_attractions_freebase(place)
+      load_tourist_destinations_freebase(place)
     }
   }
 
   function load_hotels_maps(place) {
     var request = {
-      query: "top hotels " + place,
+      query: "hotels near " + place,
     };
     
     place_service.textSearch(request, function(results){
@@ -44,7 +44,7 @@
 
   function load_restaurants_maps(place) {
     var request = {
-      query: "restaurants " + place
+      query: "restaurants near " + place
     };
     
     place_service.textSearch(request, function(results){
@@ -54,7 +54,7 @@
 
   function load_bars_maps(place) {
     var request = {
-      query: "bars " + place
+      query: "bars near " + place
     };
     
     place_service.textSearch(request, function(results){
@@ -62,8 +62,27 @@
     });
   }
 
+  function load_tourist_attractions_maps(place) {
+    var request = {
+      query: "tourist attractions near " + place
+    };
+    
+    place_service.textSearch(request, function(results){
+      var final_results = []
+      for (var i=0; i<results.length; i++) {
+        var match = results[i].name.match(/tour|travel|attractions|hotel|trip|pvt ltd/i);
+        if (match) {
+          continue
+        }
+        final_results.push(results[i])
+      }
+      append_to_page(final_results, 'Tourist Attractions')
+    });
+  }
+
   function load_tourist_destinations_freebase(place) {
     var fetch_params = {
+      'limit': 35,
       'prefixed': true,
       'filter': '(all type:/travel/travel_destination part_of:"' + place.split(",")[0] + '")',
       'scoring': 'entity',
@@ -78,33 +97,38 @@
   }
 
   function load_tourist_attractions_freebase(place) {
+    var terms = place.split(",")
+    var limit = 35;
+    if (terms.length > 2) {
+      limit = 20;
+    }
     var fetch_params = {
+      'limit': limit,
       'prefixed': true,
-      'filter': '(all type:/travel/tourist_attraction part_of:"' + place.split(",")[0] + '")',
+      'filter': '(all type:/travel/tourist_attraction part_of:"' + terms[0] + '")',
       'scoring': 'entity',
       'output': '(notable:/client/summary description type)'
     };
     fetch_freebase_suggestions({
       'fetch_params': fetch_params,
       'success': function(data) {
-        console.log(data)
         append_to_page_freebase(data.result, 'Top Attractions');
       }
     });
   }
 
   function load_hotels_freebase(place) {
+    var terms = place.split(",")
     var fetch_params = {
       'prefixed': true,
-      'filter': '(all type:/travel/hotel part_of:"' + place.split(",")[0] + '")',
+      'filter': '(all type:/travel/hotel part_of:"' + terms[0] + '")',
       'scoring': 'entity',
       'output': '(notable:/client/summary description type)'
     };
     fetch_freebase_suggestions({
       'fetch_params': fetch_params,
       'success': function(data) {
-        console.log(data)
-        if (data.result.length < 7) {
+        if (data.hits < 7) {
           load_hotels_maps(place)
           return
         }
