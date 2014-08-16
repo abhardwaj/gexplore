@@ -6,6 +6,7 @@
   <div id="logo" style="float:left;">
     <h3>G Explore</h3>
   </div>
+  <input id="query-input" type="text" value="" placeholder="coffee, indian restaurants, bars" />
   <input id="search-input" type="text" value="{{place}}" />
 </div>
 </div>
@@ -19,13 +20,16 @@
   var place_service = new google.maps.places.PlacesService(map);
   load_search(document.getElementById("search-input"));
   function load_page(place) {
+    $("#query-input").hide();
     $("#map-canvas").hide();
     $("#results").html('');
     if ("{{type}}" == "-1") {
+      load_coffee_maps(place)
+      load_food_maps(place);
+      load_bars_maps(place);
+      load_nightlife_maps(place);
       load_tourist_attractions_freebase(place)
       load_hotels_maps(place);
-      load_restaurants_maps(place);
-      load_bars_maps(place);
     } else {
       load_tourist_attractions_freebase(place)
       load_tourist_destinations_freebase(place)
@@ -42,13 +46,33 @@
     });
   }
 
-  function load_restaurants_maps(place) {
+  function load_coffee_maps(place) {
     var request = {
-      query: "restaurants near " + place
+      query: "coffee near " + place
     };
     
     place_service.textSearch(request, function(results){
-      append_to_page(results, 'Restaurants')
+      append_to_page(results, 'Coffee')
+    });
+  }
+
+  function load_food_maps(place) {
+    var request = {
+      query: "food near " + place
+    };
+    
+    place_service.textSearch(request, function(results){
+      append_to_page(results, 'Food')
+    });
+  }
+
+  function load_nightlife_maps(place) {
+    var request = {
+      query: "nightlife near " + place
+    };
+    
+    place_service.textSearch(request, function(results){
+      append_to_page(results, 'Nightlife')
     });
   }
 
@@ -64,28 +88,20 @@
 
   function load_tourist_attractions_maps(place) {
     var request = {
-      query: "tourist attractions near " + place
+      query: '"tourist+attractions" near ' + place
     };
     
     place_service.textSearch(request, function(results){
-      var final_results = []
-      for (var i=0; i<results.length; i++) {
-        var match = results[i].name.match(/tour|travel|attractions|hotel|trip|pvt ltd/i);
-        if (match) {
-          continue
-        }
-        final_results.push(results[i])
-      }
-      append_to_page(final_results, 'Tourist Attractions')
+      append_to_page(results, 'Attractions')
     });
   }
 
   function load_tourist_destinations_freebase(place) {
     var terms = place.split(",");
     var fetch_params = {
-      'limit': 35,
+      'limit': 20,
       'prefixed': true,
-      'filter': '(all type:/travel/travel_destination part_of:"' + terms[0] + '")',
+      'filter': '(all type:/travel/travel_destination type:/location/citytown part_of:"' + terms[0] + '")',
       'scoring': 'entity',
       'output': '(notable:/client/summary description type)'
     };
@@ -100,17 +116,14 @@
           }
           final_results.push(data.result[i])
         }
-        append_to_page_freebase(final_results, 'Top Destinations');
+        append_to_page_freebase(final_results, 'Destinations');
       }
     });
   }
 
   function load_tourist_attractions_freebase(place) {
     var terms = place.split(",")
-    var limit = 35;
-    if (terms.length > 2) {
-      limit = 20;
-    }
+    var limit = 20;
     var fetch_params = {
       'limit': limit,
       'prefixed': true,
@@ -121,35 +134,20 @@
     fetch_freebase_suggestions({
       'fetch_params': fetch_params,
       'success': function(data) {
-        append_to_page_freebase(data.result, 'Top Attractions');
-      }
-    });
-  }
-
-  function load_hotels_freebase(place) {
-    var terms = place.split(",")
-    var fetch_params = {
-      'prefixed': true,
-      'filter': '(all type:/travel/hotel part_of:"' + terms[0] + '")',
-      'scoring': 'entity',
-      'output': '(notable:/client/summary description type)'
-    };
-    fetch_freebase_suggestions({
-      'fetch_params': fetch_params,
-      'success': function(data) {
-        if (data.hits < 7) {
-          load_hotels_maps(place)
+        if (data.hits < 6) {
+          load_tourist_attractions_maps(place);
           return
         }
-        append_to_page_freebase(data.result, 'Top Hotels');
+        append_to_page_freebase(data.result, 'Attractions');
       }
     });
   }
 
   function append_to_page(results, title) {
     if (results.length < 1) return
-    var html = '<h3>' + title + '</h3>';
-    html += '<div class="results-list-container">';
+    var html = '<div class="results-list-container">';
+    html += '<div class="title-container"><h3 class="title">' + title + '</h3></div>';
+    html += '<div class="gallery-container">';
     for (var i = 0; i < results.length; i++) {
       if (results[i].photos != null  && results[i].photos.length > 0) {
         var image_url = results[i].photos[0].getUrl({maxHeight:400});
@@ -162,14 +160,15 @@
         html += '</div>';
       }
     }
-    html += '</div>';
+    html += '</div></div>';
     $("#results").append(html);
   }
 
   function append_to_page_freebase(results, title) {
-    if (results.length < 2) return
-    var html = '<h3>' + title + '</h3>';
-    html += '<div class="results-list-container">';
+    if (results.length < 1) return
+    var html = '<div class="results-list-container">';
+    html += '<div class="title-container"><h3 class="title">' + title + '</h3></div>';
+    html += '<div class="gallery-container">';
     for (var i = 0; i < results.length; i++) {
       if (results[i].notable.id == '/location/country') continue
       var image_url = FREEBASE_URL + '/image' +  results[i].mid + '?maxheight=300&errorid=/freebase/no_image_png';
@@ -178,8 +177,43 @@
       html += '<div class="result-item-label">' + results[i].name + '</div>'        
       html += '</div>';      
     }
-    html += '</div>';
+    html += '</div></div>';
     $("#results").append(html);
+  }
+
+  $("#query-input").autocomplete({
+    source: function(request, response) {      
+      autocomplete_service.getQueryPredictions({'input':request.term, types: ['(cities)']}, function(results){  
+        return response($.map(results, function(item) {
+          //if (item.place_id == null) {
+            return {
+              'label': item.description,
+              'value': item.description
+            }
+          //}
+        }));
+    })},
+    select: function(e, ui) {
+      return false;
+    }
+  }).data("ui-autocomplete")._renderItem = function (ul, item) {
+    return $("<li></li>")
+      .data("item.autocomplete", item)
+      .append(item.value)
+      .appendTo(ul);
+  };
+
+  function format_suggest(item) {
+    var image_url = null
+    if (item.data.photos != null) {
+      image_url = item.data.photos[0].getUrl({maxHeight:50});
+    }
+    if (image_url == null) {
+      image_url = FREEBASE_URL + '/freebase/no_image_png'
+    }
+    var result = '<span class="autocomplete-suggest-title">' +  item.data.name + '</span>';
+    
+    return result
   }
 
   load_page("{{place}}");
