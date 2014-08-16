@@ -38,7 +38,7 @@
 
   function load_hotels_maps(place) {
     var request = {
-      query: "hotels near " + place,
+      query: "hotels near " + place + " by:experts",
     };
     
     place_service.textSearch(request, function(results){
@@ -48,7 +48,7 @@
 
   function load_coffee_maps(place) {
     var request = {
-      query: "coffee near " + place
+      query: "coffee near " + place + " by:experts"
     };
     
     place_service.textSearch(request, function(results){
@@ -58,7 +58,7 @@
 
   function load_food_maps(place) {
     var request = {
-      query: "food near " + place
+      query: "food near " + place + " by:experts"
     };
     
     place_service.textSearch(request, function(results){
@@ -68,7 +68,7 @@
 
   function load_nightlife_maps(place) {
     var request = {
-      query: "nightlife near " + place
+      query: "nightlife near " + place + " by:experts"
     };
     
     place_service.textSearch(request, function(results){
@@ -78,7 +78,7 @@
 
   function load_bars_maps(place) {
     var request = {
-      query: "bars near " + place
+      query: "bars near " + place + " by:experts"
     };
     
     place_service.textSearch(request, function(results){
@@ -88,7 +88,7 @@
 
   function load_tourist_attractions_maps(place) {
     var request = {
-      query: '"tourist+attractions" near ' + place
+      query: '"tourist attractions" near ' + place
     };
     
     place_service.textSearch(request, function(results){
