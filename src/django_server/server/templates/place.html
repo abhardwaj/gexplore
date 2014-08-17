@@ -28,6 +28,7 @@
   var place_service = new google.maps.places.PlacesService(map);
   load_search(document.getElementById("search-input"));
   function load_page(place) {
+    $("#search-input").html(place);
     $("#query-input").hide();
     $("#map-canvas").hide();
     $("#results").html('');
