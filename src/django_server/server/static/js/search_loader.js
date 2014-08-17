@@ -19,7 +19,7 @@ function get_type_code(types){
 function load_search(input_id) {
   $(input_id).autocomplete({
     source: function(request, response) {
-      var search_params = {input: request.term, types: ['(regions)']}           
+      var search_params = {input: request.term}           
       autocomplete_service.getPlacePredictions(search_params, function(data) {
         console.log(data)
         if (data == null) {

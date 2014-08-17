@@ -6,7 +6,6 @@
   <div id="logo" style="float:left;">
     <h3>G Explore</h3>
   </div>
-  <input id="query-input" type="text" value="" placeholder="coffee, indian restaurants, bars" />
   <input id="search-input" type="text" placeholder="Enter a city name" value="{{place}}" />
 </div>
 </div>
@@ -19,18 +18,17 @@
   var place = "{{place}}"
   var type_str = "{{type}}";
 
-  type = -1
+  type = -1;
   try {
     type = parseInt(type_str)
   } catch (err) { }
   
   var map = new google.maps.Map(document.getElementById('map-canvas'));
+  var geocoder = new google.maps.Geocoder();
   var place_service = new google.maps.places.PlacesService(map);
   load_search(document.getElementById("search-input"));
   function load_page(place) {
-    $("#search-input").html(place);
-    $("#query-input").hide();
-    $("#map-canvas").hide();
+    $("#search-input").val(place);
     $("#results").html('');
     if (type == -1) {
       load_coffee_maps(place)
@@ -190,42 +188,21 @@
     $("#results").append(html);
   }
 
-  $("#query-input").autocomplete({
-    source: function(request, response) {      
-      autocomplete_service.getQueryPredictions({'input':request.term, types: ['(cities)']}, function(results){  
-        return response($.map(results, function(item) {
-          //if (item.place_id == null) {
-            return {
-              'label': item.description,
-              'value': item.description
-            }
-          //}
-        }));
-    })},
-    select: function(e, ui) {
-      return false;
-    }
-  }).data("ui-autocomplete")._renderItem = function (ul, item) {
-    return $("<li></li>")
-      .data("item.autocomplete", item)
-      .append(item.value)
-      .appendTo(ul);
-  };
-
-  function format_suggest(item) {
-    var image_url = null
-    if (item.data.photos != null) {
-      image_url = item.data.photos[0].getUrl({maxHeight:50});
-    }
-    if (image_url == null) {
-      image_url = FREEBASE_URL + '/freebase/no_image_png'
-    }
-    var result = '<span class="autocomplete-suggest-title">' +  item.data.name + '</span>';
-    
-    return result
+  if (place == "") {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var lat_lng = new google.maps.LatLng(
+          position.coords.latitude, position.coords.longitude);
+      geocoder.geocode({'latLng': lat_lng}, function(results, status) {
+        type = -1;
+        place = results[0].formatted_address
+        load_page(place);
+      });   
+    });
+  } else {
+    load_page(place);
   }
 
-  load_page(place);
+  
 </script>      
 
 {% endblock %} 
