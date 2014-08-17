@@ -14,6 +14,9 @@ body {
   background-color: #000;
 }
 
+body.no-background {
+  background-color: #fff;
+}
 .wrap {
   width: 100%;
   margin: 0 auto;
