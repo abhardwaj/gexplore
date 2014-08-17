@@ -15,19 +15,10 @@ def search(request):
 
 def place(request):
   p = {}
-  if 'place' not in request.REQUEST:
-    return HttpResponse("Missing place value in the query")
-  
-  place = request.REQUEST['place']
-  if place.strip() == '':
-    return HttpResponse("Empty value for place")
-  
-  p['place'] = place
+  if 'place' in request.REQUEST:
+    p['place'] = request.REQUEST['place']
 
   if 'type' in request.REQUEST:
-    try:
-      p['type'] = int(request.REQUEST['type'])
-    except:
-      p['type'] = -1
+    p['type'] = request.REQUEST['type']
   
   return render_to_response("place.html", p)

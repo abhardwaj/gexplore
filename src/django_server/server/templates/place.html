@@ -16,6 +16,14 @@
 <div id="results"></div>
 <div id="map-canvas" style="display:none;"></div>
 <script type="text/javascript">
+  var place = "{{place}}"
+  var type_str = "{{type}}";
+
+  type = -1
+  try {
+    type = parseInt(type_str)
+  } catch (err) { }
+  
   var map = new google.maps.Map(document.getElementById('map-canvas'));
   var place_service = new google.maps.places.PlacesService(map);
   load_search(document.getElementById("search-input"));
@@ -23,7 +31,7 @@
     $("#query-input").hide();
     $("#map-canvas").hide();
     $("#results").html('');
-    if ("{{type}}" == "-1") {
+    if (type == -1) {
       load_coffee_maps(place)
       load_food_maps(place);
       load_bars_maps(place);
@@ -216,7 +224,7 @@
     return result
   }
 
-  load_page("{{place}}");
+  load_page(place);
 </script>      
 
 {% endblock %} 
