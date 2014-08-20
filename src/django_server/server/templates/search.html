@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<body class="no-background">
+{% endblock %}
+{% block content %} 
+<div class="margin"></div>
+<div id="search-container">
+  <div id="logo-home">
+    <h1>G Explore</h1>
+  </div>
+  <input id="search-input-home" type="text" placeholder="Enter a place (address, city, or country)" />
+  <script type="text/javascript">
+    load_search(document.getElementById("search-input-home"));
+  </script>      
+</div> 
+{% endblock %}
