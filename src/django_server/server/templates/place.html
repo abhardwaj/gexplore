@@ -4,14 +4,16 @@
 <div class="wrap">
 <div id="search-container">
   <div id="logo">
-    <h1>Geo Explorer</h1>
+    Geo Explorer
   </div>
   <input id="search-input" type="text" placeholder="Enter a place (address, city, or country)" />   
 </div> 
+</div>
+</div>
 {% endblock %} 
-{% block content %} 
-<div id="results"></div>
+{% block content %}
 <div id="map-canvas" style="display:none;"></div>
+<div id="results" class="results"></div>
 <script type="text/javascript">
   var map = new google.maps.Map(document.getElementById('map-canvas'));
   var place_service = new google.maps.places.PlacesService(map);
@@ -30,8 +32,10 @@
       load_tourist_attractions_freebase(place, 'in');
     } else {
       load_tourist_attractions_freebase(place, 'near');
-      load_local_results_maps(place, '"cafe OR restaurants OR bars" near', 'Restaurants');
-      load_local_results_maps(place, '"nightlife OR night club" near', 'Nightlife');
+      load_local_results_maps(place, '"restaurants OR cafe" near', 'Restaurants');
+      load_local_results_maps(place, '"dessert shop OR icecream OR yogurt" near', 'Dessert');
+      load_local_results_maps(place, 'bars near', 'Bars');
+      load_local_results_maps(place, '"nightlife" near', 'Nightlife');
       load_local_results_maps(place, '"coffee shops" near', 'Coffee');
     }
   }

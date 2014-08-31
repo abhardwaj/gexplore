@@ -5,54 +5,38 @@
 
 body {
   font-family: Arial, sans-serif;
-  font-size:0.9em;
+  font-size:13px;
   margin: 0;
   padding: 0;
-  max-width: 100%;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #fff;
+  background-color: #ccc;
 }
 
-body.no-background {
-  background-color: #fff;
-}
 .wrap {
-  width: 100%;
   margin: 0 auto;
+  padding-right: 2em;
+  padding-left: 2em;
 }
 
 #header {
   width: 100%;
-  background-color: #fff;
+  background: linear-gradient(#c41200, #af0606);
   padding: 0;
   margin: 0 auto;
   padding-top: 0.75em;
   padding-bottom: 0.75em;
-  padding-left: 1em;
   color: #000;
 }
 
-.margin {
-  margin-top: 10em;
-}
-
 #logo {
+  font-size: 1.5em;
   font-weight: bold;
   font-family: 'Spirax', cursive;
-  width:14em;
   margin: 0;
-}
-
-#logo h3 {
-  font-size: 1.5em;
-  margin: 0;
-}
-
-#logo-home {
-  font-family: 'Spirax', cursive;
-  width:14em;
-  margin: 0 auto;
+  margin-right: 1em;
+  display: inline-block;
 }
 
 /*
@@ -223,43 +207,40 @@ body.no-background {
 
 #search-container {
   width: 100%;
-  margin-bottom:20px;
 }
 
 #search-input {
   margin: 0;
-  width:100%;
-  max-width: 40em;
+  width: 40em;
   height: 1.5em;
   padding-top: 0;
   padding-bottom: 0;
   font-size: 1.0em;
-  display: block;
+  display: inline-block;
 }
 
 .results {
-  width: 80%;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
   -webkit-column-width: 330px;
   -webkit-column-gap: 20px;
   -webkit-column-fill: auto;
   -moz-column-width: 330px;
-  -moz-column-gap: 10px;
+  -moz-column-gap: 20px;
   -moz-column-fill: auto;
   column-width: 330px;
-  column-gap: 10px;
+  column-gap: 20px;
   column-fill: auto;
 }
 
 .results-list-container {
+  background: #fff;
   margin: 0 auto;
   padding: 0;
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 10px;
   width: 310px;
-  border: 1px solid #ccc;
   display: inline-block;
   vertical-align: top;
   box-shadow: 0 2px 4px #999;
@@ -281,8 +262,12 @@ body.no-background {
   margin: 0;
   padding: 0;
   display: inline-block;
-  color: #444;
+  color: #ffcc33;
   opacity: 0.8;
+}
+
+.results-list-container .gallery-container {
+
 }
 
 .result-item-container {
@@ -291,11 +276,6 @@ body.no-background {
   width: 100%;
   display: block;
   border-bottom: 1px solid #eee;
-}
-
-.result-item-no-image {
-  margin: 0;
-  padding: 5px;
 }
 
 .result-item-image {
