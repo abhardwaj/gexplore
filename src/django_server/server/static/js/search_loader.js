@@ -21,7 +21,6 @@ function load_search(input_id) {
     source: function(request, response) {
       var search_params = {input: request.term}           
       autocomplete_service.getPlacePredictions(search_params, function(data) {
-        console.log(data)
         if (data == null) {
           return response([])
         }          

@@ -6,7 +6,7 @@
 var FREEBASE_URL = 'https://www.googleapis.com/freebase/v1';
 var SEARCH_URL = FREEBASE_URL + '/search';
 
-function fetch_freebase_suggestions (params) {
+function fetch_freebase_results (params) {
   if (params == null)
     return;
 

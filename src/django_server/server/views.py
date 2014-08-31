@@ -11,14 +11,4 @@ GExplorer Web Handler
 '''
 
 def search(request):
-  return render_to_response("search.html")
-
-def place(request):
-  p = {}
-  if 'place' in request.REQUEST:
-    p['place'] = request.REQUEST['place']
-
-  if 'type' in request.REQUEST:
-    p['type'] = request.REQUEST['type']
-  
-  return render_to_response("place.html", p)
+  return render_to_response("place.html")

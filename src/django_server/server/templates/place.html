@@ -3,147 +3,113 @@
 <div id="header">
 <div class="wrap">
 <div id="search-container">
-  <div id="logo" style="float:left;">
-    <h3>G Explore</h3>
+  <div id="logo">
+    <h1>Geo Explorer</h1>
   </div>
-  <input id="search-input" type="text" placeholder="Enter a place (address, city, or country)" value="{{place}}" />
-</div>
-</div>
-</div>
+  <input id="search-input" type="text" placeholder="Enter a place (address, city, or country)" />   
+</div> 
 {% endblock %} 
 {% block content %} 
 <div id="results"></div>
 <div id="map-canvas" style="display:none;"></div>
 <script type="text/javascript">
-  var place = "{{place}}"
-  var type_str = "{{type}}";
-
-  type = -1;
-  try {
-    type = parseInt(type_str)
-  } catch (err) { }
-  
   var map = new google.maps.Map(document.getElementById('map-canvas'));
-  var geocoder = new google.maps.Geocoder();
   var place_service = new google.maps.places.PlacesService(map);
-  load_search(document.getElementById("search-input"));
-  function load_page(place) {
-    $("#search-input").val(place);
+  var input = document.getElementById("search-input");
+  var autocomplete = new google.maps.places.Autocomplete(input, {types: ['geocode']});
+
+  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    var place = autocomplete.getPlace();
+    load_results(place);
+  });
+
+  function load_results(place) {
     $("#results").html('');
-    if (type == -1) {
-      load_coffee_maps(place)
-      load_food_maps(place);
-      load_bars_maps(place);
-      load_nightlife_maps(place);
-      load_tourist_attractions_freebase(place)
-      load_hotels_maps(place);
+    if (is_country_or_state(place.types)) {
+      load_tourist_destinations_freebase(place);
+      load_tourist_attractions_freebase(place, 'in');
     } else {
-      load_tourist_attractions_freebase(place)
-      load_tourist_destinations_freebase(place)
+      load_tourist_attractions_freebase(place, 'near');
+      load_local_results_maps(place, '"cafe OR restaurants OR bars" near', 'Restaurants');
+      load_local_results_maps(place, '"nightlife OR night club" near', 'Nightlife');
+      load_local_results_maps(place, '"coffee shops" near', 'Coffee');
     }
   }
 
-  function load_hotels_maps(place) {
-    var request = {
-      query: "hotels near " + place + " by:experts",
-    };
-    
-    place_service.textSearch(request, function(results){
-      append_to_page(results, 'Hotels')
-    });
-  }
 
-  function load_coffee_maps(place) {
+  function load_local_results_maps(place, query, title_str) {
     var request = {
-      query: "coffee near " + place + " by:experts"
+      query:  query + ' ' + place.formatted_address
     };
-    
-    place_service.textSearch(request, function(results){
-      append_to_page(results, 'Coffee')
-    });
-  }
 
-  function load_food_maps(place) {
-    var request = {
-      query: "food near " + place + " by:experts"
-    };
-    
     place_service.textSearch(request, function(results){
-      append_to_page(results, 'Food')
-    });
-  }
-
-  function load_nightlife_maps(place) {
-    var request = {
-      query: "nightlife near " + place + " by:experts"
-    };
-    
-    place_service.textSearch(request, function(results){
-      append_to_page(results, 'Nightlife')
-    });
-  }
-
-  function load_bars_maps(place) {
-    var request = {
-      query: "bars near " + place + " by:experts"
-    };
-    
-    place_service.textSearch(request, function(results){
-      append_to_page(results, 'Bars')
-    });
-  }
-
-  function load_tourist_attractions_maps(place) {
-    var request = {
-      query: '"tourist_attractions" near ' + place + " by:experts",
-    };
-    
-    place_service.textSearch(request, function(results){
-      append_to_page(results, 'Attractions')
+      append_to_page(results, title_str)
     });
   }
 
   function load_tourist_destinations_freebase(place) {
-    var terms = place.split(",");
+    var country_filter = ' part_of:"' +
+        place.address_components[place.address_components.length - 1].long_name + '"';
+    var state_filter = ''
+    if (place.address_components.length > 1) {
+      state_filter = ' part_of:"' +
+        place.address_components[place.address_components.length - 2].long_name + '"';
+    }
+
+    var filter = '(all type:/travel/travel_destination type:/location/citytown part_of:"' +
+        place.name + '"' + state_filter + country_filter + ')';
     var fetch_params = {
       'limit': 20,
       'prefixed': true,
-      'filter': '(all type:/travel/travel_destination type:/location/citytown part_of:"' + terms[0] + '")',
+      'filter': filter,
       'scoring': 'entity',
       'output': '(notable:/client/summary description type)'
     };
-    fetch_freebase_suggestions({
+    fetch_freebase_results({
       'fetch_params': fetch_params,
       'success': function(data) {
-        var final_results = []
-        for (var i=0; i<data.result.length; i++) {
-          var match = data.result[i].name.match(terms[0]);
-          if (match) {
-            continue
-          }
-          final_results.push(data.result[i])
-        }
-        append_to_page_freebase(final_results, 'Destinations');
+        append_to_page_freebase(data.result, 'Destinations');
       }
     });
   }
 
-  function load_tourist_attractions_freebase(place) {
-    var terms = place.split(",")
-    var limit = 20;
+  function load_tourist_attractions_freebase(place, containment, filter_radius) {
+    var country_filter = ' part_of:"' +
+        place.address_components[place.address_components.length - 1].long_name + '"';
+    var state_filter = ''
+    if (place.address_components.length > 1) {
+      state_filter = ' part_of:"' +
+        place.address_components[place.address_components.length - 2].long_name + '"';
+    }
+    var filter = '(all type:/travel/tourist_attraction part_of:"' +
+        place.name + '"' + state_filter + country_filter + ')';
+    if (filter_radius != undefined) {
+      filter = filter_radius;
+    }
+
     var fetch_params = {
-      'limit': limit,
+      'limit': 20,
       'prefixed': true,
-      'filter': '(all type:/travel/tourist_attraction part_of:"' + terms[0] + '")',
+      'filter': filter,
       'scoring': 'entity',
       'output': '(notable:/client/summary description type)'
     };
-    fetch_freebase_suggestions({
+
+    fetch_freebase_results({
       'fetch_params': fetch_params,
       'success': function(data) {
-        if (data.hits < 6) {
-          load_tourist_attractions_maps(place);
-          return
+        if (data.hits < 15) {
+          if (filter_radius == undefined) {
+          load_tourist_attractions_freebase(
+              place,
+              containment,
+              '(all type:/travel/tourist_attraction (within radius:8km' +
+                  ' lon:' + place.geometry.location.lng() +
+                  ' lat:' + place.geometry.location.lat() + '))');
+          } else {
+            load_local_results_maps(place, '"tourist attraction" ' + containment, 'Attractions')
+          }
+          return;
         }
         append_to_page_freebase(data.result, 'Attractions');
       }
@@ -151,19 +117,30 @@
   }
 
   function append_to_page(results, title) {
-    if (results.length < 1) return
+    if (results.length < 1) {
+      return;
+    }
+
     var html = '<div class="results-list-container">';
-    html += '<div class="title-container"><h3 class="title">' + title + '</h3></div>';
+    html += '<div class="title-container"><span class="title">' + title + '</span></div>';
     html += '<div class="gallery-container">';
     for (var i = 0; i < results.length; i++) {
       if (results[i].photos != null  && results[i].photos.length > 0) {
         var image_url = results[i].photos[0].getUrl({maxHeight:400});
         if (image_url == null) {
-          image_url = FREEBASE_URL + '/freebase/no_image_png'
+          image_url = FREEBASE_URL + '/freebase/no_image_png';
         }
         html += '<div class="result-item-container">';
         html += '<img class="result-item-image" src="' + image_url + '" />';
-        html += '<div class="result-item-label">' + results[i].name + '</div>'
+        html += '<div class="result-item-details">';
+        html += '<div class="place-name">' + results[i].name + '</div>';
+        if (results[i].formatted_address != undefined) {
+          html += '<div class="place-address">' + results[i].formatted_address + '</div>';
+        }
+        if (results[i].rating != undefined) {
+          html += '<span class="place-rating">Rating: ' + results[i].rating + '</span>';
+        }
+        html += '</div>';
         html += '</div>';
       }
     }
@@ -172,36 +149,43 @@
   }
 
   function append_to_page_freebase(results, title) {
-    if (results.length < 1) return
+    if (results.length < 1)
+      return;
+
     var html = '<div class="results-list-container">';
-    html += '<div class="title-container"><h3 class="title">' + title + '</h3></div>';
+    html += '<div class="title-container"><span class="title">' + title + '</span></div>';
     html += '<div class="gallery-container">';
     for (var i = 0; i < results.length; i++) {
-      if (results[i].notable.id == '/location/country') continue
-      var image_url = FREEBASE_URL + '/image' +  results[i].mid + '?maxheight=300&errorid=/freebase/no_image_png';
+      if (results[i].output.description['/common/topic/description'] == undefined) {
+        continue;
+      }
+
+      var image_url = FREEBASE_URL + '/image' + results[i].mid +
+          '?maxheight=300&errorid=/freebase/no_image_png';
       html += '<div class="result-item-container">';
       html += '<img class="result-item-image" src="' + image_url + '" />';
-      html += '<div class="result-item-label">' + results[i].name + '</div>'        
-      html += '</div>';      
+      html += '<div class="result-item-details">';
+      html += '<div class="place-name">' + results[i].name + '</div>';
+      if (results[i].output.description['/common/topic/description'].length > 0) {
+        html += '<div class="place-address">' +
+          results[i].output.description['/common/topic/description'][0].substring(0, 100) +
+          '...' + '</div>';
+      }
+      html += '</div>';
+      html += '</div>';
     }
     html += '</div></div>';
     $("#results").append(html);
   }
 
-  if (place == "") {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var lat_lng = new google.maps.LatLng(
-          position.coords.latitude, position.coords.longitude);
-      geocoder.geocode({'latLng': lat_lng}, function(results, status) {
-        type = -1;
-        place = results[0].formatted_address
-        load_page(place);
-      });   
-    });
-  } else {
-    load_page(place);
+  function is_country_or_state(types) {
+    if (types.indexOf("country") > -1 ||
+        types.indexOf("administrative_area_level_1") > -1 ||
+        types.indexOf("administrative_area_level_2") > -1) {
+      return true;
+    }
+    return false;
   }
-
   
 </script>      
 
